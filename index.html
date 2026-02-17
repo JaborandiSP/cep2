@@ -3,20 +3,118 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Guia Jaborandi - CEPs</title>
 
-<title>Guia Jaborandi CEPs</title>
+<style>
+body{
+    margin:0;
+    font-family: Arial, Helvetica, sans-serif;
+    background:#f2f2f2;
+}
 
-<link rel="stylesheet" href="style.css">
-<link rel="manifest" href="manifest.json">
+header{
+    background:#c62828;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-size:20px;
+    font-weight:bold;
+}
 
+.subtitulo{
+    font-size:14px;
+    font-weight:normal;
+}
+
+.container{
+    padding:15px;
+}
+
+.search-box{
+    display:flex;
+    margin-bottom:10px;
+}
+
+.search-box input{
+    flex:1;
+    padding:12px;
+    border-radius:8px;
+    border:1px solid #ccc;
+    font-size:16px;
+}
+
+.result-count{
+    font-size:14px;
+    margin-bottom:10px;
+    color:#555;
+}
+
+.card{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
+}
+
+.cep{
+    font-weight:bold;
+    color:#c62828;
+    margin-top:5px;
+}
+
+.highlight{
+    background:#ffeb3b;
+    padding:0;
+    border-radius:3px;
+}
+
+.btns{
+    margin-top:8px;
+    display:flex;
+    gap:8px;
+}
+
+.btn{
+    padding:6px 10px;
+    border:none;
+    border-radius:6px;
+    font-size:13px;
+    cursor:pointer;
+}
+
+.btn-copy{
+    background:#4caf50;
+    color:white;
+}
+
+.btn-map{
+    background:#1976d2;
+    color:white;
+}
+
+.btn:hover{
+    opacity:0.85;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    font-size:14px;
+    background:#eeeeee;
+}
+</style>
 </head>
+
 <body>
 
 <header>
 GUIA JABORANDI
 <div class="subtitulo">
 CEPs de Jaborandi/SP<br>
-(em fase de testes)
+(em fase de testes)<br>
+Anunciar, sugestões ou erros<br>
+<a href="https://wa.me/5517997023603" style="color:white;">WhatsApp 99702-3603</a>
 </div>
 </header>
 
@@ -24,7 +122,6 @@ CEPs de Jaborandi/SP<br>
 
 <div class="search-box">
 <input type="text" id="search" placeholder="Buscar rua, bairro ou CEP...">
-<div id="autocomplete"></div>
 </div>
 
 <div class="result-count" id="contador"></div>
@@ -33,20 +130,115 @@ CEPs de Jaborandi/SP<br>
 </div>
 
 <footer>
-Não nos responsabilizamos por divergências. Consulte os Correios.<br><br>
-
-<b>Apoiador:</b><br>
-Paulo Henrique Félix – Advogado<br>
-OAB/SP 377.734<br>
-📞 (17) 3347-1860 | 📱 (17) 99260-6726
+Não nos responsabilizamos por divergências; consulte os Correios para dados oficiais.
 </footer>
 
-<script src="script.js"></script>
-
 <script>
-if('serviceWorker' in navigator){
-  navigator.serviceWorker.register('service-worker.js');
+// ================= NORMALIZAR =================
+function normalizar(texto){
+    return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
+
+// ================= DESTACAR =================
+function destacar(textoOriginal, termoBusca){
+    if(!termoBusca) return textoOriginal;
+    const textoNormalizado = normalizar(textoOriginal);
+    const palavras = normalizar(termoBusca).split(" ").filter(p=>p);
+
+    let marcacoes=[];
+    palavras.forEach(p=>{
+        let i=0;
+        while((i=textoNormalizado.indexOf(p,i))!==-1){
+            marcacoes.push({inicio:i,fim:i+p.length});
+            i+=p.length;
+        }
+    });
+
+    if(!marcacoes.length) return textoOriginal;
+
+    marcacoes.sort((a,b)=>a.inicio-b.inicio);
+    let mesclado=[marcacoes[0]];
+    for(let i=1;i<marcacoes.length;i++){
+        let u=mesclado[mesclado.length-1];
+        if(marcacoes[i].inicio<=u.fim) u.fim=Math.max(u.fim,marcacoes[i].fim);
+        else mesclado.push(marcacoes[i]);
+    }
+
+    let r="",u=0;
+    mesclado.forEach(m=>{
+        r+=textoOriginal.slice(u,m.inicio);
+        r+=`<span class="highlight">${textoOriginal.slice(m.inicio,m.fim)}</span>`;
+        u=m.fim;
+    });
+    r+=textoOriginal.slice(u);
+    return r;
+}
+
+// ================= DADOS =================
+const dados = [
+
+];
+
+// ================= ELEMENTOS =================
+const resultsDiv=document.getElementById("results");
+const contador=document.getElementById("contador");
+const searchInput=document.getElementById("search");
+
+// ================= RENDER =================
+function render(lista, termoBusca=""){
+    resultsDiv.innerHTML="";
+    contador.innerHTML=lista.length+" resultado(s) encontrado(s)";
+
+    lista.forEach(item=>{
+        const endereco=`${item.logradouro}, ${item.bairro}, Jaborandi SP`;
+        const mapa="https://www.google.com/maps/search/?api=1&query="+encodeURIComponent(endereco);
+
+        resultsDiv.innerHTML+=`
+        <div class="card">
+            <strong>${destacar(item.logradouro, termoBusca)}</strong><br>
+            ${destacar(item.bairro, termoBusca)}
+            <div class="cep">CEP: ${destacar(item.cep, termoBusca)}</div>
+
+            <div class="btns">
+                <button class="btn btn-copy" onclick="copiarCEP('${item.cep}')">📋 Copiar CEP</button>
+                <button class="btn btn-map" onclick="window.open('${mapa}','_blank')">🗺️ Mapa</button>
+            </div>
+        </div>`;
+    });
+}
+
+// ================= COPIAR CEP =================
+function copiarCEP(cep){
+    navigator.clipboard.writeText(cep);
+    let t=document.createElement("div");
+    t.innerText="CEP copiado: "+cep;
+    t.style.position="fixed";
+    t.style.bottom="20px";
+    t.style.left="50%";
+    t.style.transform="translateX(-50%)";
+    t.style.background="#333";
+    t.style.color="#fff";
+    t.style.padding="10px 15px";
+    t.style.borderRadius="8px";
+    t.style.zIndex=9999;
+    document.body.appendChild(t);
+    setTimeout(()=>t.remove(),2000);
+}
+
+// ================= BUSCA =================
+render(dados);
+
+searchInput.addEventListener("input", function(){
+    const termo=this.value.trim();
+    const palavras=normalizar(termo).split(" ").filter(p=>p);
+
+    const filtrado=dados.filter(item=>{
+        const texto=normalizar(item.logradouro+" "+item.bairro+" "+item.cep);
+        return palavras.every(p=>texto.includes(p));
+    });
+
+    render(filtrado, termo);
+});
 </script>
 
 </body>
