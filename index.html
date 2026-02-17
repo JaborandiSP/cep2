@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Guia Jaborandi CEPs</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+
+</head>
+<body>
+
+<header>
+GUIA JABORANDI
+<div class="subtitulo">
+CEPs de Jaborandi/SP<br>
+(em fase de testes)
+</div>
+</header>
+
+<div class="container">
+
+<div class="search-box">
+<input type="text" id="search" placeholder="Buscar rua, bairro ou CEP...">
+<div id="autocomplete"></div>
+</div>
+
+<div class="result-count" id="contador"></div>
+<div id="results"></div>
+
+</div>
+
+<footer>
+Não nos responsabilizamos por divergências. Consulte os Correios.<br><br>
+
+<b>Apoiador:</b><br>
+Paulo Henrique Félix – Advogado<br>
+OAB/SP 377.734<br>
+📞 (17) 3347-1860 | 📱 (17) 99260-6726
+</footer>
+
+<script src="script.js"></script>
+
+<script>
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('service-worker.js');
+}
+</script>
+
+</body>
+</html>
