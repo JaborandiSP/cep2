@@ -1,0 +1,11 @@
+{
+  "name": "Guia Jaborandi CEPs",
+  "short_name": "Jaborandi CEP",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#c62828",
+  "theme_color": "#c62828",
+  "icons": [
+    { "src": "icon.png", "sizes": "192x192", "type": "image/png" }
+  ]
+}
