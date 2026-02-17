@@ -112,6 +112,23 @@ footer{
     font-size:14px;
     background:#eeeeee;
 }
+
+#toast{
+    position:fixed;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    background:#333;
+    color:white;
+    padding:10px 16px;
+    border-radius:20px;
+    font-size:14px;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity 0.4s, bottom 0.4s;
+    z-index:9999;
+}
+  
 </style>
 </head>
 
@@ -197,10 +214,22 @@ function destacar(textoOriginal, termoBusca){
 // ================= FUNÇÕES EXTRA =================
 function copiarCEP(cep){
     navigator.clipboard.writeText(cep).then(()=>{
-        alert("CEP copiado: " + cep);
+        mostrarToast("CEP copiado: " + cep);
     });
 }
 
+function mostrarToast(msg){
+    const toast = document.getElementById("toast");
+    toast.innerText = msg;
+    toast.style.opacity = "1";
+    toast.style.bottom = "40px";
+
+    setTimeout(()=>{
+        toast.style.opacity = "0";
+        toast.style.bottom = "20px";
+    }, 2000); // 2 segundos
+}
+  
 function abrirMapa(endereco){
     window.open("https://www.google.com/maps/search/?api=1&query=" + endereco, "_blank");
 }
@@ -399,6 +428,6 @@ searchInput.addEventListener("input", function(){
 });
 
 </script>
-
+<div id="toast"></div>
 </body>
     </html>
