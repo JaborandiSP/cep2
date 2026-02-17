@@ -18,6 +18,11 @@ function levenshtein(a, b) {
     return m[a.length][b.length];
 }
 
+// ===== DADOS (cole sua lista aqui) =====
+const dados = [
+
+];
+
 // ===== ELEMENTOS =====
 const resultsDiv = document.getElementById("results");
 const contador = document.getElementById("contador");
