@@ -1,3 +1,13 @@
+let dados = [];
+
+fetch("dados.json")
+  .then(r => r.json())
+  .then(json => {
+    dados = json;
+    render(dados);
+  })
+  .catch(e => console.error("Erro ao carregar dados:", e));
+
 // ===== NORMALIZAR =====
 function normalizar(texto){
     return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
