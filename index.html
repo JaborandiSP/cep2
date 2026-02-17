@@ -139,6 +139,10 @@ function normalizar(texto){
     return texto.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"");
 }
 
+function normalizarCEP(cep){
+    return cep.replace(/\D/g,""); // só números
+}
+
 // ================= DESTACAR =================
 function destacar(textoOriginal, termoBusca){
     if(!termoBusca) return textoOriginal;
@@ -374,9 +378,14 @@ searchInput.addEventListener("input", function(){
     const termo=this.value.trim();
     const palavras=normalizar(termo).split(" ").filter(p=>p);
 
-    const filtrado=dados.filter(item=>{
-        const texto=normalizar(item.logradouro+" "+item.bairro+" "+item.cep);
-        return palavras.every(p=>texto.includes(p));
+    const filtrado = dados.filter(item=>{
+    const texto = normalizar(item.logradouro+" "+item.bairro);
+    const cepLimpo = normalizarCEP(item.cep);
+
+    const termo = normalizar(termoBusca);
+    const termoCEP = normalizarCEP(termoBusca);
+
+    return texto.includes(termo) || cepLimpo.includes(termoCEP);
     });
 
     render(filtrado, termo);
