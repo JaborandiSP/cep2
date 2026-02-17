@@ -18,13 +18,6 @@ function levenshtein(a, b) {
     return m[a.length][b.length];
 }
 
-// ===== DADOS (cole sua lista aqui) =====
-const dados = [
-{logradouro:"Rua Luiz Gambarato", bairro:"Centro", cep:"14775-011"},
-{logradouro:"Rua Omar Sforcini", bairro:"Centro", cep:"14775-294"},
-// 👉 COLE O RESTO DOS SEUS DADOS AQUI
-];
-
 // ===== ELEMENTOS =====
 const resultsDiv = document.getElementById("results");
 const contador = document.getElementById("contador");
