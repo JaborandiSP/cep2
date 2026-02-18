@@ -1,0 +1,34 @@
+<svg width="400" height="700" viewBox="0 0 400 700" xmlns="http://www.w3.org/2000/svg" style="background:#fdf8f0;">
+  <!-- Soft light beam -->
+  <rect x="180" y="0" width="40" height="200" fill="url(#lightGradient)" />
+  <defs>
+    <linearGradient id="lightGradient" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fff8dc" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#fff8dc" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Speaker silhouette -->
+  <circle cx="100" cy="400" r="40" fill="#d8cfc4" />
+  <rect x="85" y="440" width="30" height="100" fill="#d8cfc4" rx="10"/>
+
+  <!-- Listener silhouette -->
+  <circle cx="300" cy="400" r="40" fill="#cfe3e8" />
+  <rect x="285" y="440" width="30" height="100" fill="#cfe3e8" rx="10"/>
+
+  <!-- Zigzag line representing distorted truth -->
+  <polyline points="140,400 160,380 180,420 200,390 220,410 240,390 260,400"
+            stroke="#d8a63f" stroke-width="3" fill="none" stroke-dasharray="5,5" />
+
+  <!-- Catechism book icon -->
+  <rect x="70" y="520" width="40" height="30" fill="#f6e5c3" stroke="#d8cfc4" stroke-width="2"/>
+  <line x1="70" y1="535" x2="110" y2="535" stroke="#d8cfc4" stroke-width="2"/>
+  <line x1="70" y1="545" x2="110" y2="545" stroke="#d8cfc4" stroke-width="2"/>
+
+  <!-- Small cross symbol -->
+  <rect x="190" y="50" width="5" height="30" fill="#d8a63f"/>
+  <rect x="175" y="65" width="35" height="5" fill="#d8a63f"/>
+
+  <!-- Flame symbolizing truth -->
+  <path d="M200,150 C190,130 210,130 200,100 C205,130 195,130 200,150 Z" fill="#f9d57e"/>
+</svg>
